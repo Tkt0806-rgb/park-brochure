@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公園マップ</title>
+
+<style>
+body{margin:0;text-align:center;font-family:sans-serif;}
+
+.map-container{position:relative;display:inline-block;}
+
+.map{width:1000%;max-width:100%;display:block;}
+
+.spot{position:absolute;width:45%;height:45%;border:none;border-radius:50%;background:red;color:white;font-size:20%;font-weight:bold;cursor:pointer;}
+
+.route-image-container {
+    position: relative;
+    width: 100%;
+}
+
+.route-image-container img {
+    width: 100%;
+    display: block;
+}
+
+.route-video {
+    position: absolute;
+
+    /* 動画を置く位置 */
+    left: 10%;
+    top: 20%;
+
+    /* 動画の大きさ */
+    width: 30%;
+
+    z-index: 10;
+}
+
+.modal-content {position: relative;}
+
+.prev-btn,
+.next-btn {
+    position: absolute;
+    top: 94%;
+    transform: translateY(-50%);
+
+    background: white;
+    border: 2% solid black;
+    border-radius: 5%;
+
+    color: black;
+    font-size: 18%;
+    font-weight: bold;
+    cursor: pointer;
+
+    width: 130%;
+    height: 60%;
+    padding: 0;
+
+    /* 文字をボタンの中央にする */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Prevの位置 */
+.prev-btn {
+    left: 150%;
+}
+
+/* Nextの位置 */
+.next-btn {
+    right: 150%;
+}
+
+/* 青い四角ボタン */
+.info-btn{position:absolute;width:50%;height:50%;display:flex;justify-content:center;align-items:center;background:#0078D4;color:white;border:none;border-radius:0;font-size:40%;font-weight:bold;cursor:pointer;z-index:100;}
+
+/* トイレ（青い丸） */
+.toilet-btn{position:absolute;width:50%;height:50%;border:none;border-radius:50%;background:#0078D4;color:white;font-size:20%;font-weight:bold;cursor:pointer;z-index:100;}
+
+/* センター（黄色い丸） */
+.center-btn{position:absolute;width:50%;height:50%;border:none;border-radius:50%;background:#FFD700;color:white;font-size:20%;font-weight:bold;cursor:pointer;z-index:100;}
+
+/* 公園（オレンジの四角） */
+.park-btn{position:absolute;width:54%;height:54%;border:none;border-radius:0;background:#FF8C00;color:white;font-size:40%;font-weight:bold;cursor:pointer;z-index:100;}
+
+/* 歴史（オレンジの四角） */
+.history-btn{position:absolute;width:180%;height:80%;border:none;border-radius:0;background:#FF8C00;color:white;font-size:20%;font-weight:bold;cursor:pointer;z-index:100;}
+
+/* ルート（黒の四角） */
+.route-btn{position:absolute;width:125%;height:60%;border:none;border-radius:0;background:black;color:white;font-size:20%;font-weight:bold;cursor:pointer;z-index:100;}
+
+/* いろいろ（黄緑の四角） */
+.any-btn{position:absolute;width:30%;height:30%;border:none;border-radius:0;background:#B8D200;color:white;font-size:20%;font-weight:bold;cursor:pointer;z-index:100;}
+
+
+/* ①②の位置は必要に応じて調整 */
+.spot1{left:635%;top:110%;}
+
+.spot2{left:445%;top:380%;}
+
+.spot3{left:350%;top:550%;}
+
+.spot4{left:244%;top:780%;}
+
+.spot5{left:275%;top:850%;}
+
+.spot6{left:420%;top:841%;}
+
+.spot7{left:290%;top:1150%;}
+
+.spot8{left:100%;top:1260%;}
+
+.parking1{left:178%;top:1301%;}
+
+.parking2{left:460%;top:1415%;}
+
+.parking3{left:455%;top:1495%;}
+
+.toilet1{left:722%;top:11%;}
+
+.toilet2{left:426.5%;top:686%;}
+
+.toilet3{left:137.5%;top:1021%;}
+
+.toilet4{left:349%;top:1310%;}
+
+.park1{left:635%;top:400%;}
+
+.park2{left:326%;top:1388%;}
+
+.center{left:400%;top:220%;}
+
+.any1{left:340%;top:120%;}
+
+.any2{left:215%;top:674%;}
+
+.any3{left:630%;top:1445%;}
+
+.route{left:800%;top:280%;}
+
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;overflow:auto;}
+
+.modal-content{background:white;width:60%;max-width:700%;margin:80% auto;padding:20%;border-radius:15%;text-align:center;}
+
+.modal-content img{width:100%;height:auto;}
+
+.close-btn{margin-top:20%;padding:10% 30%;font-size:18%;cursor:pointer;}
+</style>
+</head>
+
+<body>
+
+<div class="map-container">
+
+    <!-- 地図画像 -->
+    <img src="map.png" class="map" alt="公園マップ">
+
+    <!-- ① -->
+    <button class="spot spot1" onclick="openModal('spot1')">
+        ①
+    </button>
+
+    <!-- ② -->
+    <button class="spot spot2" onclick="openModal('spot2')">
+        ②
+    </button>
+
+    <!-- ③ -->
+    <button class="spot spot3" onclick="openModal('spot3')">
+        ③
+    </button>
+
+    <!-- ④ -->
+    <button class="spot spot4" onclick="openModal('spot4')">
+        ④
+    </button>
+
+    <!-- ⑤ -->
+    <button class="spot spot5" onclick="openModal('spot5')">
+        ⑤
+    </button>
+
+    <!-- ⑥ -->
+    <button class="spot spot6" onclick="openModal('spot6')">
+        ⑥
+    </button>
+
+    <!-- ⑦ -->
+    <button class="spot spot7" onclick="openModal('spot7')">
+        ⑦
+    </button>
+
+    <!-- ⑧ -->
+    <button class="spot spot8" onclick="openModal('spot8')">
+        ⑧
+    </button>
+
+<button class="info-btn parking1"
+        onclick="openModal('parking1')">P</button>
+
+<button class="info-btn parking2"
+        onclick="openModal('parking2')">P</button>
+
+<button class="info-btn parking3"
+        onclick="openModal('parking3')">P</button>
+
+<button class="toilet-btn toilet1"
+        onclick="openModal('toilet1')">T</button>
+
+<button class="toilet-btn toilet2"
+        onclick="openModal('toilet2')">T</button>
+
+<button class="toilet-btn toilet3"
+        onclick="openModal('toilet3')">T</button>
+
+<button class="toilet-btn toilet4"
+        onclick="openModal('toilet4')">T</button>
+
+<button class="history-btn park1"
+        onclick="openModal('park1')">湊山公園の歴史</button>
+
+<button class="park-btn park2"
+        onclick="openModal('park2')">i</button>
+
+<button class="center-btn center"
+        onclick="openModal('center')">〇</button>
+
+<button class="route-btn route"
+        onclick="openModal('route')">駐車場までのルート</button>
+
+<button class="any-btn any1"
+        onclick="openModal('any1')">□</button>
+
+<button class="any-btn any2"
+        onclick="openModal('any2')">□</button>
+
+<button class="any-btn any3"
+        onclick="openModal('any3')">□</button>
+
+
+</div>
+
+<!-- 日本庭園 -->
+<div id="spot1" class="modal"> 
+    <div class="modal-content"> 
+ 
+        <!-- 前へ --> 
+<button class="prev-btn"
+        onclick="changeSpot('spot1', -1)">
+    <span>← Prev</span>
+</button>
+ 
+        <img src="images/spot1.jpg" alt=""> 
+ 
+        <!-- 次へ --> 
+<button class="next-btn"
+        onclick="changeSpot('spot1', 1)">
+    <span>Next →</span>
+</button> 
+ 
+        <button class="close-btn" 
+                onclick="closeModal('spot1')"> 
+            Close 
+        </button> 
+ 
+    </div> 
+</div>
+
+<!-- 大正天皇のお手植え松 -->
+<div id="spot2" class="modal"> 
+    <div class="modal-content"> 
+ 
+        <!-- 前へ --> 
+<button class="prev-btn"
+        onclick="changeSpot('spot2', -1)">
+    <span>← Prev</span>
+</button>
+ 
+        <img src="images/spot2.jpg" alt=""> 
+ 
+        <!-- 次へ --> 
+<button class="next-btn"
+        onclick="changeSpot('spot2', 1)">
+    <span>Next →</span>
+</button>
+ 
+        <button class="close-btn" 
+                onclick="closeModal('spot2')"> 
+            Close 
+        </button> 
+ 
+    </div> 
+</div>
+
+<div id="spot3" class="modal"> 
+    <div class="modal-content"> 
+ 
+        <!-- 前へ --> 
+<button class="prev-btn"
+        onclick="changeSpot('spot3', -1)">
+    <span>← Prev</span>
+</button>
+ 
+        <img src="images/spot3.jpg" alt=""> 
+ 
+        <!-- 次へ --> 
+<button class="next-btn"
+        onclick="changeSpot('spot3', 1)">
+    <span>Next →</span>
+</button>
+ 
+        <button class="close-btn" 
+                onclick="closeModal('spot3')"> 
+            Close 
+        </button> 
+ 
+    </div> 
+</div>
+
+<div id="spot4" class="modal"> 
+    <div class="modal-content"> 
+ 
+        <!-- 前へ --> 
+<button class="prev-btn"
+        onclick="changeSpot('spot4', -1)">
+    <span>← Prev</span>
+</button>
+ 
+        <img src="images/spot4.jpg" alt=""> 
+ 
+        <!-- 次へ --> 
+<button class="next-btn"
+        onclick="changeSpot('spot4', 1)">
+    <span>Next →</span>
+</button>
+ 
+        <button class="close-btn" 
+                onclick="closeModal('spot4')"> 
+            Close 
+        </button> 
+ 
+    </div> 
+</div>
+
+<div id="spot5" class="modal"> 
+    <div class="modal-content"> 
+ 
+        <!-- 前へ --> 
+<button class="prev-btn"
+        onclick="changeSpot('spot5', -1)">
+    <span>← Prev</span>
+</button> 
+ 
+        <img src="images/spot5.jpg" alt=""> 
+ 
+        <!-- 次へ --> 
+<button class="next-btn"
+        onclick="changeSpot('spot5', 1)">
+    <span>Next →</span>
+</button>
+ 
+        <button class="close-btn" 
+                onclick="closeModal('spot5')"> 
+            Close 
+        </button> 
+ 
+    </div> 
+</div>
+
+<div id="spot6" class="modal"> 
+    <div class="modal-content"> 
+ 
+        <!-- 前へ --> 
+<button class="prev-btn"
+        onclick="changeSpot('spot6', -1)">
+    <span>← Prev</span>
+</button>
+ 
+        <img src="images/spot6.jpg" alt=""> 
+ 
+        <!-- 次へ --> 
+<button class="next-btn"
+        onclick="changeSpot('spot6', 1)">
+    <span>Next →</span>
+</button>
+ 
+        <button class="close-btn" 
+                onclick="closeModal('spot6')"> 
+            Close 
+        </button> 
+ 
+    </div> 
+</div>
+
+<div id="spot7" class="modal"> 
+    <div class="modal-content"> 
+ 
+        <!-- 前へ --> 
+<button class="prev-btn"
+        onclick="changeSpot('spot7', -1)">
+    <span>← Prev</span>
+</button>
+ 
+        <img src="images/spot7.jpg" alt=""> 
+ 
+        <!-- 次へ --> 
+<button class="next-btn"
+        onclick="changeSpot('spot7', 1)">
+    <span>Next →</span>
+</button> 
+ 
+        <button class="close-btn" 
+                onclick="closeModal('spot7')"> 
+            Close 
+        </button> 
+ 
+    </div> 
+</div>
+
+<div id="spot8" class="modal"> 
+    <div class="modal-content"> 
+ 
+        <!-- 前へ --> 
+<button class="prev-btn"
+        onclick="changeSpot('spot8', -1)">
+    <span>← Prev</span>
+</button>
+ 
+        <img src="images/spot8.jpg" alt=""> 
+ 
+        <!-- 次へ --> 
+<button class="next-btn"
+        onclick="changeSpot('spot8', 1)">
+    <span>Next →</span>
+</button>
+ 
+        <button class="close-btn" 
+                onclick="closeModal('spot8')"> 
+            Close 
+        </button> 
+ 
+    </div> 
+</div>
+
+<div id="parking1" class="modal">
+    <div class="modal-content">
+
+        <img src="images/parking1.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('parking1')">
+            閉じる
+        </button>
+
+    </div>
+</div>
+
+<div id="parking2" class="modal">
+    <div class="modal-content">
+
+        <img src="images/parking2.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('parking2')">
+            閉じる
+        </button>
+
+    </div>
+</div>
+
+<div id="parking3" class="modal">
+    <div class="modal-content">
+
+        <img src="images/parking3.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('parking3')">
+            閉じる
+        </button>
+
+    </div>
+</div>
+
+<div id="toilet1" class="modal">
+    <div class="modal-content">
+
+        <img src="images/toilet1.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('toilet1')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="toilet2" class="modal">
+    <div class="modal-content">
+
+        <img src="images/toilet2.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('toilet2')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="toilet3" class="modal">
+    <div class="modal-content">
+
+        <img src="images/toilet3.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('toilet3')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="toilet4" class="modal">
+    <div class="modal-content">
+
+        <img src="images/toilet4.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('toilet4')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="park1" class="modal">
+    <div class="modal-content">
+
+        <img src="images/park1.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('park1')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+
+<div id="park2" class="modal">
+    <div class="modal-content">
+
+        <img src="images/park2.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('park2')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="center" class="modal">
+    <div class="modal-content">
+
+        <img src="images/center.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('center')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="any1" class="modal">
+    <div class="modal-content">
+
+        <img src="images/hujidana.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('any1')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="any2" class="modal">
+    <div class="modal-content">
+
+        <img src="images/azumaya1.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('any2')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="any3" class="modal">
+    <div class="modal-content">
+
+        <img src="images/azumaya2.jpg" alt      <br>
+
+        <button class="close-btn"
+                onclick="closeModal('any3')">
+            閉じる
+        </button>
+    </div>
+</div>
+
+<div id="route" class="modal">
+    <div class="modal-content">
+
+        <div class="route-image-container">
+
+            <img src="images/route.jpg" alt="駐車場までのルート">
+
+            <video class="route-video" controls>
+                <source src="movies/route.mp4" type="video/mp4">
+                このブラウザは動画の再生に対応していません。
+            </video>
+
+        </div>
+
+        <br><br>
+
+        <button class="close-btn"
+                onclick="closeModal('route')">
+            閉じる
+        </button>
+
+    </div>
+</div>
+
+<script>
+function openModal(id){
+    document.getElementById(id).style.display = "block";
+}
+
+function closeModal(id){
+    document.getElementById(id).style.display = "none";
+}
+
+const spots = [
+    "spot1",
+    "spot2",
+    "spot3",
+    "spot4",
+    "spot5",
+    "spot6",
+    "spot7",
+    "spot8"
+];
+
+function changeSpot(currentSpot, direction) {
+
+    const currentIndex = spots.indexOf(currentSpot);
+
+    let nextIndex = currentIndex + direction;
+
+    // ①の前 → ⑧へ
+    if (nextIndex < 0) {
+        nextIndex = spots.length - 1;
+    }
+
+    // ⑧の次 → ①へ
+    if (nextIndex >= spots.length) {
+        nextIndex = 0;
+    }
+
+    // 今開いているポップアップを閉じる
+    document.getElementById(currentSpot).style.display = "none";
+
+    // 次のポップアップを開く
+    document.getElementById(spots[nextIndex]).style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
+</html>
